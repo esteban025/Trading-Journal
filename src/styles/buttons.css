@@ -21,3 +21,16 @@
     box-shadow: 0 2px 8px #00000090;
   }
 }
+.btn-secondary {
+  border-color: #00000020;
+  background: linear-gradient(to right bottom, 
+    var(--color-slate-100),
+    white,
+    var(--color-slate-100)
+  );
+
+  &:hover{
+    border-color: #00000050;
+    box-shadow: 0 2px 8px #00000040;
+  }
+}

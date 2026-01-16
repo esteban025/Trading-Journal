@@ -3,64 +3,114 @@ import SectionCard from "@/components/SectionCard.astro";
 ---
 
 <SectionCard gridName="registerForm">
-  <fieldset class="">
-    <legend class="text-xl font-bold text-center mb-3"
-      >Registro de Operaciones</legend
-    >
-    <form id="register-form" class="register-form">
-      <div class="content-input">
-        <input type="date" id="date" name="date" required />
-        <label for="date">Fecha</label>
-      </div>
-      <div class="content-input">
-        <select id="type" name="type" required>
-          <option value="" selected disabled>-</option>
-          <option value="compra">Compra</option>
-          <option value="venta">Venta</option>
-        </select>
-        <label for="type">compra o venta</label>
-      </div>
-      <div class="flex items-center gap-2">
+  <form
+    action="/api/trades"
+    method="POST"
+    class="register-form"
+    id="register-form"
+  >
+    <fieldset class="flex flex-col gap-4 my-2">
+      <legend class="text-xl font-semibold text-center mb-2"
+        >Registrar Trade</legend
+      >
+      <input type="hidden" name="created_at" value={new Date().toISOString()} />
+
+      <div class="grid grid-cols-2 gap-2 p-2">
         <div class="content-input">
-          <input type="text" id="asset" name="asset" required />
-          <label for="asset">Activo</label>
+          <input type="text" id="activo" name="activo" required />
+          <label for="activo">Activo</label>
         </div>
+
+        <div
+          class="wrapper-ratios relative flex items-center border border-slate-300 rounded-full"
+        >
+          <!-- checked -->
+          <div class="long">
+            <input
+              id="ratio-long"
+              type="radio"
+              name="long"
+              id="long"
+              checked
+              class="input-ratio"
+            />
+            <label for="long">Compra</label>
+          </div>
+          <div class="short">
+            <input
+              id="ratio-short"
+              type="radio"
+              name="long"
+              id="short"
+              class="input-ratio"
+            />
+            <label for="short">Venta</label>
+          </div>
+          <div class="indicator" id="indicator-type"></div>
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-2 gap-2 gap-y-3 py-4 px-2 bg-slate-100 rounded-4xl"
+      >
         <div class="content-input">
-          <input type="text" id="lotaje" name="lotaje" required />
+          <input
+            type="number"
+            id="precio_entrada"
+            name="precio_entrada"
+            step="0.000001"
+            required
+          />
+          <label for="precio_entrada">Precio de Entrada</label>
+        </div>
+
+        <div class="content-input">
+          <input
+            type="number"
+            id="precio_salida"
+            name="precio_salida"
+            step="0.000001"
+            required
+          />
+          <label for="precio_salida">Precio de Salida</label>
+        </div>
+
+        <div class="content-input col-span-2">
+          <input type="number" id="lotaje" name="lotaje" step="0.01" required />
           <label for="lotaje">Lotaje</label>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <div class="content-input">
-          <input
-            type="number"
-            step="0.01"
-            id="price-in"
-            name="price-in"
-            required
-          />
-          <label for="price-in">Precio entrada</label>
-        </div>
-        <div class="content-input">
-          <input
-            type="number"
-            step="0.01"
-            id="price-out"
-            name="price-out"
-            required
-          />
-          <label for="price-out">Precio salida</label>
-        </div>
-      </div>
       <div class="content-input">
-        <input type="number" id="quantity" name="quantity" required />
-        <label for="quantity">Cantidad</label>
+        <input
+          type="number"
+          id="ganancia"
+          name="ganancia"
+          step="0.01"
+          required
+        />
+        <label for="ganancia">Ganancia/Pérdida ($)</label>
       </div>
 
-      <button type="submit" class="btn btn-primary">Registrar Operación</button>
-    </form>
-  </fieldset>
+      <div class="content-input">
+        <textarea
+          id="comentario"
+          name="comentario"
+          rows="4"
+          cols="50"
+          placeholder="Escribe alguna oberservacion o comentario relacionado al trade ..."
+        ></textarea>
+        <!-- <label for="comentario">Comentario:</label> -->
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="submit" class="btn btn-primary w-full"
+          >Guardar Trade</button
+        >
+        <button type="reset" class="btn w-full btn-secondary">Limpiar</button>
+      </div>
+    </fieldset>
+  </form>
 </SectionCard>
 
 <style>
@@ -79,27 +129,98 @@ import SectionCard from "@/components/SectionCard.astro";
         left: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--color-slate-400);
+        color: var(--color-slate-500);
         pointer-events: none;
         display: block;
         background-color: transparent;
         padding-inline: 0;
+        border-radius: 5px;
         transition: all 300ms ease-in-out;
       }
+
       & > input,
-      & > select {
+      & > select,
+      & > textarea {
         padding: 0.75rem 1rem;
-        border: 2px solid var(--color-slate-500);
+        border: 2px solid var(--color-slate-300);
         border-radius: 9999px;
         outline: none;
         width: 100%;
+        background-color: white;
 
-        &:focus ~ label {
+        &:focus ~ label,
+        &:valid ~ label {
           background-color: white;
           padding-inline: 0.5rem;
           top: 0;
+          font-size: 0.75rem;
         }
+      }
+
+      & > textarea {
+        border-radius: 1rem;
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      & > select {
+        cursor: pointer;
       }
     }
   }
+
+  .wrapper-ratios {
+    & > div {
+      /* background-color: red; */
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      & input {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        opacity: 0;
+        cursor: pointer;
+      }
+      & label {
+        position: relative;
+        z-index: 10;
+        color: var(--color-slate-500);
+        text-align: center;
+        padding: 0.75rem 1rem;
+        pointer-events: none;
+      }
+    }
+
+    & .indicator {
+      background-color: var(--color-slate-100);
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--color-slate-300);
+      pointer-events: none;
+      transform: translateX(0%);
+      left: 0;
+      transition: all 300ms ease-in-out;
+    }
+  }
 </style>
+
+<script>
+  import { $, $$ } from "@/utils/queryDocument";
+
+  const $ind = $("#indicator-type") as HTMLElement;
+  const $$ratios = $$(".input-ratio") as NodeListOf<HTMLInputElement>;
+
+  $$ratios.forEach((ratio) => {
+    ratio.addEventListener("change", (e) => {
+      if ((e.target as HTMLInputElement).id === "ratio-long") {
+        $ind.style.transform = "translateX(0%)";
+      } else {
+        $ind.style.transform = "translateX(100%)";
+      }
+    });
+  });
+</script>

@@ -1,23 +1,121 @@
 ---
 import SectionCard from "@/components/SectionCard.astro";
-import { getTrades } from "@/services/trades";
-const trades = await getTrades();
 ---
 
 <SectionCard gridName="visualOperations">
-  <h2>Visual Operations</h2>
-  {
-    trades.length === 0 ? (
-      <p>No trades available.</p>
-    ) : (
-      <ul>
-        {trades.map((trade: any) => (
-          <li>
-            {trade.date}: {trade.asset} - {trade.type} - {trade.amount} @{" "}
-            {trade.price}
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <div class="flex flex-col gap-6">
+    <header class="flex items-center justify-between">
+      <h2 class="text-xl font-semibold">Calendario de Operaciones</h2>
+      <p>
+        <strong>
+          <span>Monthly P/L:</span>
+          <span class="text-green-400">$ 1453,34</span>
+        </strong>
+      </p>
+    </header>
+    <nav class="flex items-center justify-between">
+      <div class="months">
+        <button class="prev-month">&lt;</button>
+        <span class="current-month">August 2024</span>
+        <button class="next-month">&gt;</button>
+      </div>
+      <div class="today">
+        <button class="p-1.5 px-4 rounded-md bg-slate-100">Today</button>
+      </div>
+    </nav>
+    <section class="calendary">
+      <div class="flex flex-col gap-2">
+        <div class="calendar-header grid grid-cols-7 gap-2">
+          <div class="day-label">Domingo</div>
+          <div class="day-label">Lunes</div>
+          <div class="day-label">Martes</div>
+          <div class="day-label">Miércoles</div>
+          <div class="day-label">Jueves</div>
+          <div class="day-label">Viernes</div>
+          <div class="day-label">Sábado</div>
+        </div>
+        <div class="calendar-days grid grid-cols-7 gap-2" id="calendar-days">
+          <!-- Days will be generated dynamically -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Paginacion beetwen months -->
 </SectionCard>
+
+<style>
+  .calendar-header {
+    & .day-label {
+      background-color: var(--color-slate-100);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--color-slate-500);
+      padding: 0.5rem;
+    }
+  }
+
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+  }
+
+  .day-cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--color-slate-200);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .day-cell:hover {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+  }
+
+  .day-cell.empty {
+    cursor: default;
+    background-color: #f8fafc;
+  }
+
+  .day-cell.today {
+    border-color: #3b82f6;
+    border-width: 2px;
+  }
+
+  .day-number {
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .day-pnl {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: auto;
+  }
+
+  .day-pnl.positive {
+    color: #22c55e;
+  }
+
+  .day-pnl.negative {
+    color: #ef4444;
+  }
+
+  .trade-indicator {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+  }
+</style>
