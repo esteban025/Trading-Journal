@@ -1,7 +1,23 @@
 ---
 import SectionCard from "@/components/SectionCard.astro";
+import { getTrades } from "@/services/trades";
+const trades = await getTrades();
 ---
 
 <SectionCard gridName="visualOperations">
   <h2>Visual Operations</h2>
+  {
+    trades.length === 0 ? (
+      <p>No trades available.</p>
+    ) : (
+      <ul>
+        {trades.map((trade: any) => (
+          <li>
+            {trade.date}: {trade.asset} - {trade.type} - {trade.amount} @{" "}
+            {trade.price}
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </SectionCard>
