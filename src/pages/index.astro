@@ -1,11 +1,27 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "@/layouts/Layout.astro";
+import RegisterForm from "@/sections/RegisterForm.astro";
+import VisualOperations from "@/sections/VisualOperations.astro";
+import Graphs from "@/sections/Graphs.astro";
+import Months from "@/sections/Months.astro";
 ---
 
 <Layout>
-	<Welcome />
+	<main class="grid gap-2 w-full min-h-screen p-4">
+		<VisualOperations />
+		<RegisterForm />
+		<!-- <Graphs /> -->
+		<Months />
+	</main>
 </Layout>
+
+<style>
+	main {
+		grid-template-columns: 2fr 1fr;
+		grid-template-rows: 1fr 1fr 1fr;
+		grid-template-areas:
+			"visualOperations registerForm"
+			"visualOperations registerForm"
+			"months months";
+	}
+</style>

@@ -1,0 +1,23 @@
+.btn {
+  padding: .75rem 1.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+  border: 2px solid;
+}
+.btn-primary {
+  background: linear-gradient(
+    to right bottom,
+    var(--color-slate-900),
+    var(--color-slate-700),
+    var(--color-slate-900)
+  );
+  color: var(--color-slate-50);
+  box-shadow: 0 5px 15px #00000020;
+  border-color: #ffffff20;
+  
+  &:hover{
+    border-color: #ffffff90;
+    box-shadow: 0 2px 8px #00000090;
+  }
+}

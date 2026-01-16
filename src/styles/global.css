@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "./buttons.css";
+@import '@fontsource-variable/inter-tight';
+
+body {
+  font-family: 'Inter Tight Variable', sans-serif;
+}

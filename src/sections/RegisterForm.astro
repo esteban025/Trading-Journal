@@ -1,0 +1,105 @@
+---
+import SectionCard from "@/components/SectionCard.astro";
+---
+
+<SectionCard gridName="registerForm">
+  <fieldset class="">
+    <legend class="text-xl font-bold text-center mb-3"
+      >Registro de Operaciones</legend
+    >
+    <form id="register-form" class="register-form">
+      <div class="content-input">
+        <input type="date" id="date" name="date" required />
+        <label for="date">Fecha</label>
+      </div>
+      <div class="content-input">
+        <select id="type" name="type" required>
+          <option value="" selected disabled>-</option>
+          <option value="compra">Compra</option>
+          <option value="venta">Venta</option>
+        </select>
+        <label for="type">compra o venta</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="content-input">
+          <input type="text" id="asset" name="asset" required />
+          <label for="asset">Activo</label>
+        </div>
+        <div class="content-input">
+          <input type="text" id="lotaje" name="lotaje" required />
+          <label for="lotaje">Lotaje</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="content-input">
+          <input
+            type="number"
+            step="0.01"
+            id="price-in"
+            name="price-in"
+            required
+          />
+          <label for="price-in">Precio entrada</label>
+        </div>
+        <div class="content-input">
+          <input
+            type="number"
+            step="0.01"
+            id="price-out"
+            name="price-out"
+            required
+          />
+          <label for="price-out">Precio salida</label>
+        </div>
+      </div>
+      <div class="content-input">
+        <input type="number" id="quantity" name="quantity" required />
+        <label for="quantity">Cantidad</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Registrar Operación</button>
+    </form>
+  </fieldset>
+</SectionCard>
+
+<style>
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+
+    & .content-input {
+      position: relative;
+      width: 100%;
+
+      & > label {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-slate-400);
+        pointer-events: none;
+        display: block;
+        background-color: transparent;
+        padding-inline: 0;
+        transition: all 300ms ease-in-out;
+      }
+      & > input,
+      & > select {
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--color-slate-500);
+        border-radius: 9999px;
+        outline: none;
+        width: 100%;
+
+        &:focus ~ label {
+          background-color: white;
+          padding-inline: 0.5rem;
+          top: 0;
+        }
+      }
+    }
+  }
+</style>
