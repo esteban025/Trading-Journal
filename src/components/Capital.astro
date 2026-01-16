@@ -1,0 +1,9 @@
+---
+import { db as connection } from "@/lib/db.ts";
+const [config] = await connection.query<any[]>(
+  "SELECT capital_inicial FROM config LIMIT 1",
+);
+const CAPITAL_INICIAL = config[0]?.capital_inicial || 1000;
+---
+
+<span class="text-green-400 text-xl">$ {CAPITAL_INICIAL}</span>

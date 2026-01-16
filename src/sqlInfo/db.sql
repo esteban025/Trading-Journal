@@ -44,3 +44,13 @@ BEGIN
         ganancia_total = VALUES(ganancia_total);
 END //
 DELIMITER ;
+
+CREATE TABLE config (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    capital_inicial DECIMAL(15, 2) NOT NULL DEFAULT 1000.00,
+    fecha_inicio DATE NOT NULL,
+    actualizado TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO config (capital_inicial, fecha_inicio) 
+VALUES (1000.00, CURDATE());

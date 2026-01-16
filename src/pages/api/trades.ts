@@ -6,7 +6,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Obtener datos del formulario
     const formData = await request.formData();
 
-    const fecha = formData.get('fecha') as string;
+    const fecha = formData.get('created_at') as string;
     const activo = formData.get('activo') as string;
     const tipo = formData.get('tipo') as string;
     const lotaje = parseFloat(formData.get('lotaje') as string);
@@ -19,14 +19,17 @@ export const POST: APIRoute = async ({ request }) => {
     if (!fecha || !activo || !tipo || isNaN(lotaje) || isNaN(precio_entrada) || isNaN(precio_salida) || isNaN(ganancia)) {
       return new Response(JSON.stringify({
         success: false,
-        message: 'Datos incompletos o inválidos'
+        message: 'Datos incompletos o inválidos',
+        data: { fecha, activo, tipo, lotaje, precio_entrada, precio_salida, ganancia, comentario }
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Validar tipo de operación
+    // Validaciones específicas
+    const fechaFormatted = fecha.split('T')[0];
+
     if (tipo !== 'compra' && tipo !== 'venta') {
       return new Response(JSON.stringify({
         success: false,
@@ -44,16 +47,14 @@ export const POST: APIRoute = async ({ request }) => {
       const [result] = await db.query(
         `INSERT INTO trades (fecha, activo, tipo, lotaje, precio_entrada, precio_salida, ganancia, comentario) 
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [fecha, activo, tipo, lotaje, precio_entrada, precio_salida, ganancia, comentario]
+        [fechaFormatted, activo, tipo, lotaje, precio_entrada, precio_salida, ganancia, comentario]
       );
 
       // Actualizar resumen diario
       await db.query(
         'CALL actualizar_resumen(?)',
-        [fecha]
+        [fechaFormatted]
       );
-
-      await db.end();
 
       return new Response(JSON.stringify({
         success: true,
@@ -65,7 +66,6 @@ export const POST: APIRoute = async ({ request }) => {
       });
 
     } catch (dbError) {
-      await db.end();
       throw dbError;
     }
 

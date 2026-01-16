@@ -1,15 +1,16 @@
 ---
 import SectionCard from "@/components/SectionCard.astro";
+import Capital from "@/components/Capital.astro";
 ---
 
-<SectionCard gridName="visualOperations">
+<SectionCard gridName="calendaryOperations">
   <div class="flex flex-col gap-6">
     <header class="flex items-center justify-between">
       <h2 class="text-xl font-semibold">Calendario de Operaciones</h2>
       <p>
         <strong>
           <span>Monthly P/L:</span>
-          <span class="text-green-400">$ 1453,34</span>
+          <Capital server:defer />
         </strong>
       </p>
     </header>

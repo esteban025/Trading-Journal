@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@astrojs/vercel':
-        specifier: ^9.0.4
+        specifier: 9.0.4
         version: 9.0.4(astro@5.16.9(@vercel/functions@2.2.13)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.55.1)(typescript@5.9.3))(rollup@4.55.1)
       '@fontsource-variable/inter-tight':
         specifier: 5.2.7

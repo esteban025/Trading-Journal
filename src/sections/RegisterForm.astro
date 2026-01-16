@@ -28,23 +28,23 @@ import SectionCard from "@/components/SectionCard.astro";
           <div class="long">
             <input
               id="ratio-long"
-              type="radio"
-              name="long"
-              id="long"
-              checked
               class="input-ratio"
+              type="radio"
+              name="tipo"
+              value="compra"
+              checked
             />
-            <label for="long">Compra</label>
+            <label for="ratio-long">Compra</label>
           </div>
           <div class="short">
             <input
               id="ratio-short"
-              type="radio"
-              name="long"
-              id="short"
               class="input-ratio"
+              type="radio"
+              name="tipo"
+              value="venta"
             />
-            <label for="short">Venta</label>
+            <label for="ratio-short">Venta</label>
           </div>
           <div class="indicator" id="indicator-type"></div>
         </div>
@@ -223,4 +223,52 @@ import SectionCard from "@/components/SectionCard.astro";
       }
     });
   });
+
+  // Enviar formulario por fetch para evitar redirección
+  const form = document.getElementById(
+    "register-form",
+  ) as HTMLFormElement | null;
+  if (form) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const submitter = event.submitter as HTMLButtonElement | null;
+      if (submitter) submitter.disabled = true;
+
+      try {
+        // Actualizar created_at en el momento de enviar
+        const createdAtInput = form.querySelector<HTMLInputElement>(
+          'input[name="created_at"]',
+        );
+        if (createdAtInput) {
+          createdAtInput.value = new Date().toISOString();
+        }
+
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (response.ok && data && data.success) {
+          form.reset();
+          // Dejar el indicador en la posición por defecto (Compra)
+          const indicator = document.getElementById(
+            "indicator-type",
+          ) as HTMLElement | null;
+          if (indicator) {
+            indicator.style.transform = "translateX(0%)";
+          }
+        } else {
+          console.error("Error al guardar trade", data);
+        }
+      } catch (err) {
+        console.error("Error de red al guardar trade", err);
+      } finally {
+        if (submitter) submitter.disabled = false;
+      }
+    });
+  }
 </script>
